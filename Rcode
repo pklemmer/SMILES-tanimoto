@@ -19,6 +19,7 @@ molA <- "[H][C@@]12COC3=C(C=C(OC)C(OC)=C3)[C@]1([H])C(=O)C1=CC=C3O[C@H](CC3=C1O2
   #This is the SMILES for Rotenone; defining molA as another SMILES value allows for comparisons of all kinds of pesticides.
 df_smiles <- data.frame(lapply(df_smiles, as.character), stringsAsFactors = FALSE) 
   #For some reason, the df is seen as tables, not characters. This function forces all values to be characters
-for(row in 1:nrow(df_smiles)){calculation <-ms.compute(molA, df_smiles[row,"SMILES"], standardize = FALSE)}
+for(row in 1:nrow(df_smiles)){calculation <-ms.compute(molA, df_smiles[row,"SMILES"], standardize = FALSE)
   #This line repeats ms.compute for each row of df_smiles so that a comparison between Rotenone (=molA) and all other (available) pesticides (= "SMILES") is made
   #RxnSim also allows comparisons between each pesticide in a list by using the ms.compute.sim.matrix function.
+print(calculation)}
