@@ -1,4 +1,5 @@
   #Comments refer to the code above them.
+  #This script generates Tanimoto/Jaccard chemical similarity scores. Here, it is used to determine what molecules in the dataset are most chemically similar to a reference chemical.
 sessionInfo()
 install.packages("RxnSim")
   #requires Rtools
@@ -11,12 +12,11 @@ Chemical_List_EPAPCS_2022_04_11 <- read_csv("C:/Chemical List EPAPCS-2022-04-11.
 df_smiles_unfiltered <- select(Chemical_List_EPAPCS_2022_04_11, "PREFERRED NAME", "SMILES")
 df_smiles <- na.omit(df_smiles_unfiltered) 
   #Cleaning up dataset by removing all entries without SMILES
-View(df_smiles)
 
 molA <- "[H][C@@]12COC3=C(C=C(OC)C(OC)=C3)[C@]1([H])C(=O)C1=CC=C3O[C@H](CC3=C1O2)C(C)=C" 
   #This is the SMILES for Rotenone; defining molA as another SMILES value allows for comparisons of all kinds of pesticides.
 df_smiles <- data.frame(lapply(df_smiles, as.character), stringsAsFactors = FALSE) 
-  #For some reason, the df is seen as tables, not characters. This function forces all values to be characters)
+  #For some reason, the df is seen as tables, not characters. This function forces all values to be characters
 Tanimoto_coefficient <- vector("numeric",nrow(df_smiles))
   #Preparing a container for the calculated coefficient
 for(row in 1:nrow(df_smiles)){
@@ -27,4 +27,5 @@ Tanimoto_coefficient[row] <- calculation
 }
 df_smiles <- cbind (df_smiles,Tanimoto_coefficient)
   #Tanimoto_coefficient is added to the df_smiles for easier viewing
+View(df_smiles)
 write.csv(df_smiles, file = "Tanimoto-coefficient-Rotenone.csv")
