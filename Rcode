@@ -27,3 +27,4 @@ Tanimoto_coefficient[row] <- calculation
 }
 df_smiles <- cbind (df_smiles,Tanimoto_coefficient)
   #Tanimoto_coefficient is added to the df_smiles for easier viewing
+write.csv(df_smiles, file = "Tanimoto-coefficient-Rotenone.csv")
