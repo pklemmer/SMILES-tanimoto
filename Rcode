@@ -27,5 +27,7 @@ Tanimoto_coefficient[row] <- calculation
 }
 df_smiles <- cbind (df_smiles,Tanimoto_coefficient)
   #Tanimoto_coefficient is added to the df_smiles for easier viewing
-View(df_smiles)
-write.csv(df_smiles, file = "Tanimoto-coefficient-Rotenone.csv")
+df_smiles_sorted <- df_smiles[order(-df_smiles$Tanimoto_coefficient),]
+View(df_smiles_sorted)
+write.csv(df_smiles_sorted, file = "Tanimoto-coefficient-Rotenone.csv")
+  #Exports df_smiles_sorted to a .csv file with observations sorted in descending order according to their Tanimoto coefficient.
