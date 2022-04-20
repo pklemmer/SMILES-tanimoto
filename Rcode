@@ -4,7 +4,7 @@ sessionInfo()
 install.packages("RxnSim")
   #requires Rtools
 install.packages("dplyr")
-packages <- c("readr","dplyr","utils", "RxnSim")
+packages <- c("readr","dplyr","utils", "RxnSim", "ggplot2")
 lapply(packages, library, character.only = TRUE)
   #The previous 2 lines make it easier to load packages and libraries without needing to enter library() every time
 
@@ -31,3 +31,6 @@ df_smiles_sorted <- df_smiles[order(-df_smiles$Tanimoto_coefficient),]
 View(df_smiles_sorted)
 write.csv(df_smiles_sorted, file = "Tanimoto-coefficient-Rotenone.csv")
   #Exports df_smiles_sorted to a .csv file with observations sorted in descending order according to their Tanimoto coefficient.
+
+p1 <- ggplot(data=df_smiles_sorted)+geom_col(mapping=aes(x= reorder(preferred_name,-Tanimoto_coefficient), y=Tanimoto_coefficient))
+p1
