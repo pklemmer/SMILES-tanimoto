@@ -31,6 +31,6 @@ df_smiles_sorted <- df_smiles[order(-df_smiles$Tanimoto_coefficient),]
 View(df_smiles_sorted)
 write.csv(df_smiles_sorted, file = "Tanimoto-coefficient-Rotenone.csv")
   #Exports df_smiles_sorted to a .csv file with observations sorted in descending order according to their Tanimoto coefficient.
-
+preferred_name <- df_smiles[,1]
 p1 <- ggplot(data=df_smiles_sorted)+geom_col(mapping=aes(x= reorder(preferred_name,-Tanimoto_coefficient), y=Tanimoto_coefficient))
 p1
