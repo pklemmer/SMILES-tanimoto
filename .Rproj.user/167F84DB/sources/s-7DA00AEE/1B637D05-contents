@@ -8,7 +8,7 @@ packages <- c("readr","dplyr","utils", "RxnSim", "ggplot2")
 lapply(packages, library, character.only = TRUE)
 #The previous 2 lines make it easier to load packages and libraries without needing to enter library() every time
 
-Chemical_List_EPAPCS_2022_04_11 <- read_csv("C:/Chemical List EPAPCS-2022-04-11.csv")
+Chemical_List_EPAPCS_2022_04_11 <- read_csv("Chemical List EPAPCS-2022-04-11.csv")
 df_smiles_unfiltered <- select(Chemical_List_EPAPCS_2022_04_11, "PREFERRED NAME", "SMILES")
 df_smiles <- na.omit(df_smiles_unfiltered) 
 #Cleaning up dataset by removing all entries without SMILES
