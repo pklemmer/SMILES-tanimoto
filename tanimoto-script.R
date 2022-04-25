@@ -30,7 +30,6 @@ names(pc_agr)[2] <- "SMILES"
 df_master <- rbind(epapcs, pc_eup, pc_agr)
 df_master <- distinct(df_master)
   #Removing duplicates
-View(df_master)
 
 molA <- "[H][C@@]12COC3=C(C=C(OC)C(OC)=C3)[C@]1([H])C(=O)C1=CC=C3O[C@H](CC3=C1O2)C(C)=C" 
   #This is the SMILES for Rotenone; defining molA as another SMILES value allows for comparisons of all kinds of pesticides.
@@ -48,7 +47,7 @@ df_master <- cbind (df_master,Tanimoto_coefficient)
   #Tanimoto_coefficient is added to the df_smiles for easier viewing
 df_master_sorted <- df_master[order(-df_master$Tanimoto_coefficient),]
 View(df_master_sorted)
-write.csv(df_master_sorted, file = "Tanimoto-coefficient-Rotenone.csv")
+#write.csv(df_master_sorted, file = "Tanimoto-coefficient-Rotenone.csv")
   #Exports df_smiles_sorted to a .csv file with observations sorted in descending order according to their Tanimoto coefficient.
 preferred_name <- df_master[,1]
 p1 <- ggplot(data=df_master_sorted)+geom_col(mapping=aes(x= reorder(preferred_name,-Tanimoto_coefficient), y=Tanimoto_coefficient))
