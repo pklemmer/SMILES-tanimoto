@@ -33,6 +33,8 @@ molA <- "[H][C@@]12COC3=C(C=C(OC)C(OC)=C3)[C@]1([H])C(=O)C1=CC=C3O[C@H](CC3=C1O2
   #This is the SMILES for Rotenone; defining molA as another SMILES value allows for comparisons of all kinds of pesticides.
 df_master <- data.frame(lapply(df_master, as.character), stringsAsFactors = FALSE) 
   #For some reason, the df is seen as tables, not characters. This function forces all values to be characters
+df_master <- df_master[!duplicated(df_master$PREFERRED.NAME), ]
+  #Removing duplicate chemicals based on the PREFERRED.NAME column
 Tanimoto_coefficient <- vector("numeric",nrow(df_master))
   #Preparing a container for the calculated coefficient
 for(row in 1:nrow(df_master)){
@@ -44,12 +46,12 @@ for(row in 1:nrow(df_master)){
 df_master <- cbind (df_master,Tanimoto_coefficient)     
   #Tanimoto_coefficient is added to the df_smiles for easier viewing
 df_master_sorted <- df_master[order(-df_master$Tanimoto_coefficient),]
-df_master_sorted <- df_master_sorted[!duplicated(df_master_sorted$PREFERRED.NAME), ]
-  #Removing duplicates from the dataframe - as 3 datasets are combined, overlapping is unavoidable
-#Duplicates are removed based on presence in the PREFERRED.NAME column since the SMILES formats differ slightly between datasets but are still correctly interpreted.
 View(df_master_sorted)
-write.csv(df_master_sorted, file = "Tanimoto-coefficient-Rotenone-1.csv")
+#write.csv(df_master_sorted, file = "Tanimoto-coefficient-Rotenone-1.csv")
   #Exports df_smiles_sorted to a .csv file with observations sorted in descending order according to their Tanimoto coefficient.
 preferred_name <- df_master[,1]
-p1 <- ggplot(data=df_master_sorted)+geom_col(mapping=aes(x= reorder(preferred_name,-Tanimoto_coefficient), y=Tanimoto_coefficient))
+median <- median(df_master_sorted[,3])
+p1 <- ggplot(data=df_master_sorted)+geom_col(mapping=aes(x= reorder(preferred_name,-Tanimoto_coefficient), y=Tanimoto_coefficient))+geom_col(mapping=aes(x= median(nrow(df_master_sorted)), y=median), color="red")
 p1
+  #indicate median in plot (can be used to indicate how similar the dataset is to rotenone overall)
+
