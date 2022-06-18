@@ -1,17 +1,17 @@
-  #Comments refer to the code above them.
   #This script generates Tanimoto/Jaccard chemical similarity scores. Here, it is used to determine what molecules in the dataset are most chemically similar to a reference chemical.
 sessionInfo()
 install.packages("RxnSim")
   #requires Rtools
 install.packages("dplyr")
-packages <- c("readr","dplyr","utils", "RxnSim", "ggplot2")
-lapply(packages, library, character.only = TRUE)
-  #The previous 2 lines make it easier to load packages and libraries without needing to enter library() every time
+install.packages("ggplot2")
+install.packages("svglite")
 
-epapcs <- read_csv("Chemical List EPAPCS-2022-04-11.csv")
-pc_eup <- read_csv("PubChem_compound_list_ElW0fZMu9pLBvH6l_N03iWB0JxQ494ui8YeQ7uqWgu_qj74.csv")
-pc_agr <- read_csv("PubChem_compound_list_o-QFwS1hSN1_90ruyJYDwlQ_i1-vbTmhQ4Qi7ViVMOxYjAw.csv")
+library(readr)
+epapcs <- read_csv("Data/Chemical List EPAPCS-2022-04-11.csv")
+pc_eup <- read_csv("Data/PubChem_compound_list_ElW0fZMu9pLBvH6l_N03iWB0JxQ494ui8YeQ7uqWgu_qj74.csv")
+pc_agr <- read_csv("Data/PubChem_compound_list_o-QFwS1hSN1_90ruyJYDwlQ_i1-vbTmhQ4Qi7ViVMOxYjAw.csv")
   #Importing datasets
+library(dplyr)
 epapcs <- select(epapcs, "PREFERRED NAME", "SMILES")
 pc_eup <- select(pc_eup, "cmpdname", "isosmiles")
 pc_agr <- select(pc_agr, "cmpdname", "isosmiles")
@@ -37,6 +37,7 @@ df_master <- df_master[!duplicated(df_master$PREFERRED.NAME), ]
   #Removing duplicate chemicals based on the PREFERRED.NAME column
 Tanimoto_coefficient <- vector("numeric",nrow(df_master))
   #Preparing a container for the calculated coefficient
+library(RxnSim)
 for(row in 1:nrow(df_master)){
   calculation<- ms.compute(molA, df_master[row,"SMILES"], standardize = TRUE) 
   #This line repeats ms.compute for each row of df_smiles so that a comparison between Rotenone (=molA) and all other (available) pesticides (="SMILES") is made
@@ -46,12 +47,17 @@ for(row in 1:nrow(df_master)){
 df_master <- cbind (df_master,Tanimoto_coefficient)     
   #Tanimoto_coefficient is added to the df_smiles for easier viewing
 df_master_sorted <- df_master[order(-df_master$Tanimoto_coefficient),]
-View(df_master_sorted)
-#write.csv(df_master_sorted, file = "Tanimoto-coefficient-Rotenone-1.csv")
+write.csv(df_master_sorted, file = "Output/Tanimoto-coefficient-Rotenone.csv")
   #Exports df_smiles_sorted to a .csv file with observations sorted in descending order according to their Tanimoto coefficient.
-preferred_name <- df_master[,1]
-median <- median(df_master_sorted[,3])
-p1 <- ggplot(data=df_master_sorted)+geom_col(mapping=aes(x= reorder(preferred_name,-Tanimoto_coefficient), y=Tanimoto_coefficient))+geom_col(mapping=aes(x= median(nrow(df_master_sorted)), y=median), color="red")
+library(ggplot2)
+p1 <- ggplot(data=df_master_sorted)+
+  geom_col(mapping=aes(x= reorder(df_master_sorted$PREFERRED.NAME,-Tanimoto_coefficient), y=Tanimoto_coefficient),color="darkslateblue")+
+  theme_grey()+
+  theme(axis.text.x=element_blank())+
+  labs(x = "Pesticides", y="Tanimoto coefficient")
+library(svglite)
+svglite("Output/tanimoto-scores.svg")
 p1
-  #indicate median in plot (can be used to indicate how similar the dataset is to rotenone overall)
+dev.off()
+  #Saving plot as svg to 'output' folder
 
