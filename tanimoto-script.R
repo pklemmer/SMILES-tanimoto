@@ -5,6 +5,7 @@ install.packages("RxnSim")
 install.packages("dplyr")
 install.packages("ggplot2")
 install.packages("svglite")
+setwd("~/GitHub/SMILES-tanimoto")
 
 library(readr)
 epapcs <- read_csv("Data/Chemical List EPAPCS-2022-04-11.csv")
